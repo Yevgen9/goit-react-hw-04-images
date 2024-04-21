@@ -68,7 +68,7 @@ import "react-toastify/dist/ReactToastify.css";
 import s from "./Searchbar.module.scss";
 import { useState } from "react";
 
-export default function Searchbar2({ onSubmit }) {
+export default function Searchbar({ onSubmit }) {
   const [query, setQuery] = useState("");
 
   const handleChangeInput = (e) => {
@@ -93,7 +93,7 @@ export default function Searchbar2({ onSubmit }) {
   };
 
   const handleClearInput = () => {
-    setQuery(query);
+    setQuery("");
   };
 
   return (
