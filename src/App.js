@@ -1,39 +1,39 @@
-// import React, { Component } from 'react';
-// import Searchbar2 from "./components/Searchbar/Searchbar2";
-// import ImageGallery from './components/ImageGallery/ImageGallery';
+// import React, { Component } from "react";
+// import Searchbar from "./components/Searchbar/Searchbar";
+// import ImageGallery from "./components/ImageGallery/ImageGallery";
 // // import { ToastContainer, toast } from 'react-toastify';
-// import Button from './components/Button/Button';
-// import Loader from './components/Loader/Loader';
-// import Modal from './components/Modal/Modal';
-// import 'react-toastify/dist/ReactToastify.css';
+// import Button from "./components/Button/Button";
+// import Loader from "./components/Loader/Loader";
+// import Modal from "./components/Modal/Modal";
+// import "react-toastify/dist/ReactToastify.css";
 
 // export default class App extends Component {
 //   state = {
-//     query: '',
+//     query: "",
 //     arrayOfImages: [],
 //     page: 1,
 //     showButton: false,
 //     showLoader: false,
 //     showModal: false,
-//     largeImageURL: '',
+//     largeImageURL: "",
 //   };
 
-//   onSubmitForm = query => {
-//     this.setState({ query: '', arrayOfImages: [], page: 1 });
+//   onSubmitForm = (query) => {
+//     this.setState({ query: "", arrayOfImages: [], page: 1 });
 //     this.setState({ query: query });
 //     this.fetchAPI(query, 1);
 //   };
 
-//   onButtonClickLoadMore = query => {
+//   onButtonClickLoadMore = (query) => {
 //     // console.log('buttonClick');
 //     this.fetchAPI(this.state.query, this.state.page + 1);
-//     this.setState(prevState => ({ page: prevState.page + 1 }));
+//     this.setState((prevState) => ({ page: prevState.page + 1 }));
 //   };
 
 //   fetchAPI(query, page) {
-//     let BASE_URL = 'https://pixabay.com/api/?';
-//     let KEY = '43336458-76637faf1bf6ab87a136a6b9c';
-//     let PER_PAGE = '12';
+//     let BASE_URL = "https://pixabay.com/api/?";
+//     let KEY = "43336458-76637faf1bf6ab87a136a6b9c";
+//     let PER_PAGE = "12";
 
 //     let URL = `${BASE_URL}q=${query}&page=${page}&key=${KEY}&image_type=photo&orientation=horizontal&per_page=${PER_PAGE}`;
 
@@ -41,9 +41,9 @@
 //     this.setState({ showLoader: true });
 
 //     fetch(URL)
-//       .then(response => response.json())
+//       .then((response) => response.json())
 
-//       .then(data => {
+//       .then((data) => {
 //         // console.log(data);
 
 //         // toast.success(`Found ${data.totalHits} images, Bro!`, {
@@ -57,7 +57,7 @@
 //         //   theme: 'dark',
 //         // });
 
-//         this.setState(prevState => ({
+//         this.setState((prevState) => ({
 //           arrayOfImages: [...prevState.arrayOfImages, ...data.hits],
 //         }));
 
@@ -72,7 +72,7 @@
 //         this.setState({ showLoader: false });
 //       })
 
-//       .catch(error => {
+//       .catch((error) => {
 //         // Error handling
 //         this.setState({ error });
 //       });
@@ -82,7 +82,7 @@
 //   //   this.setState({ showModal: true });
 //   // };
 
-//   showModal = largeImageURL => {
+//   showModal = (largeImageURL) => {
 //     this.setState({ showModal: true, largeImageURL });
 //   };
 
@@ -94,7 +94,7 @@
 //     return (
 //       <>
 //         {/* <ToastContainer /> */}
-//         <Searchbar2 onSubmit={this.onSubmitForm} />
+//         <Searchbar onSubmit={this.onSubmitForm} />
 //         {this.state.arrayOfImages.length > 0 && (
 //           <ImageGallery
 //             images={this.state.arrayOfImages}
@@ -116,8 +116,7 @@
 //   }
 // }
 //==================================================================
-
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Searchbar from "./components/Searchbar/Searchbar";
 import ImageGallery from "./components/ImageGallery/ImageGallery";
 // import { ToastContainer, toast } from 'react-toastify';
@@ -135,21 +134,17 @@ export default function App() {
   const [showModal, setShowModal] = useState(false);
   const [largeImageURL, setLargeImageURL] = useState("");
 
-  useEffect(() => {
-    if (query !== "") {
-      fetchAPI(query, 1);
-    }
-  }, [query]);
-
   const onSubmitForm = (query) => {
-    setQuery(query);
+    setQuery("");
     setArrayOfImages([]);
     setPage(1);
+    setQuery(query);
+    fetchAPI(query, 1);
   };
 
-  const onButtonClickLoadMore = () => {
+  const onButtonClickLoadMore = (query) => {
     fetchAPI(query, page + 1);
-    setPage(page + 1);
+    setPage((prevPage) => prevPage + 1);
   };
 
   const fetchAPI = (query, page) => {
@@ -159,6 +154,7 @@ export default function App() {
 
     let URL = `${BASE_URL}q=${query}&page=${page}&key=${KEY}&image_type=photo&orientation=horizontal&per_page=${PER_PAGE}`;
 
+    // == show loader ==
     setShowLoader(true);
 
     fetch(URL)
@@ -168,7 +164,11 @@ export default function App() {
 
         let totalNumberOfImages = data.totalHits;
         let alreadyDownLoaded = PER_PAGE * page;
-        setShowButton(totalNumberOfImages > alreadyDownLoaded);
+        if (totalNumberOfImages > alreadyDownLoaded) {
+          setShowButton(true);
+        } else {
+          setShowButton(true);
+        }
 
         setShowLoader(false);
       })
@@ -178,9 +178,9 @@ export default function App() {
       });
   };
 
-   showModal = (largeImageURL) => {
-    setLargeImageURL(largeImageURL);
+  const showModalImage = (largeImageURL) => {
     setShowModal(true);
+    setLargeImageURL(largeImageURL);
   };
 
   const hideModal = () => {
@@ -192,7 +192,7 @@ export default function App() {
       {/* <ToastContainer /> */}
       <Searchbar onSubmit={onSubmitForm} />
       {arrayOfImages.length > 0 && (
-        <ImageGallery images={arrayOfImages} onShowModal={showModal} />
+        <ImageGallery images={arrayOfImages} onShowModal={showModalImage} />
       )}
       {showButton && <Button onButtonClick={onButtonClickLoadMore} />}
       {showLoader && <Loader />}
